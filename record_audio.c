@@ -1,29 +1,19 @@
-#ifndef RECORD_AUDIO_H
-#define RECORD_AUDIO_H
-#include <windows.h>
-#include <mmsystem.h>
+#include "record_audio.h"
 
-#define FORMAT_TAG          1 // PCM
-#define SAMPLERATE          16000 // Sample frequency per second
-#define BITSPERSAMPLE       16 // 
-#define NCHANNELS           1 // 1 - Mono or 2 - Stereo
-#define BLOCK_ALIGN         NCHANNELS * (BITSPERSAMPLE / 8)
-#define AVG_BYTE_PER_SECOND BLOCK_ALIGN * SAMPLERATE
-#define BLOCK_SIZE 8000
-
+extern struct WAV_HEADER wav;
 //Length is typically 44100*time...
-int StartRecord(char * data, int length)
+int record(char * data, int length)
 {
     HWAVEIN hWaveIn;
     WAVEHDR WaveInHdr;
  
     WAVEFORMATEX pFormat;
-    pFormat.wFormatTag =WAVE_FORMAT_PCM;     
-    pFormat.nSamplesPerSec = SAMPLERATE;     
-    pFormat.wBitsPerSample = BITSPERSAMPLE;            
-    pFormat.nChannels = NCHANNELS;
-    pFormat.nBlockAlign = BLOCK_ALIGN; 
-    pFormat.nAvgBytesPerSec = AVG_BYTE_PER_SECOND; 
+    pFormat.wFormatTag = WAVE_FORMAT_PCM;     
+    pFormat.nSamplesPerSec = wav.sampleRate;     
+    pFormat.wBitsPerSample = wav.bitsPerSample;            
+    pFormat.nChannels = wav.nChannels;
+    pFormat.nBlockAlign = wav.blockAlign; 
+    pFormat.nAvgBytesPerSec = wav.avgBytesPerSecond; 
     pFormat.cbSize = 0;
     
     if(waveInOpen(&hWaveIn, WAVE_MAPPER,&pFormat,0L, 0L, WAVE_FORMAT_DIRECT)) return 1;
@@ -44,18 +34,18 @@ int StartRecord(char * data, int length)
     return 0;
 }
  
-int StartPlayback(char *data, int length)
+int play(char *data, int length)
 {
     HWAVEOUT hWaveOut;
     WAVEHDR WaveOutHdr;
  
     WAVEFORMATEX pFormat;
-    pFormat.wFormatTag =WAVE_FORMAT_PCM;     
-    pFormat.nSamplesPerSec = SAMPLERATE;     
-    pFormat.wBitsPerSample = BITSPERSAMPLE;            
-    pFormat.nChannels = NCHANNELS;
-    pFormat.nBlockAlign = BLOCK_ALIGN; 
-    pFormat.nAvgBytesPerSec = AVG_BYTE_PER_SECOND; 
+    pFormat.wFormatTag = WAVE_FORMAT_PCM;     
+    pFormat.nSamplesPerSec = wav.sampleRate;     
+    pFormat.wBitsPerSample = wav.bitsPerSample;            
+    pFormat.nChannels = wav.nChannels;
+    pFormat.nBlockAlign = wav.blockAlign; 
+    pFormat.nAvgBytesPerSec = wav.avgBytesPerSecond; 
     pFormat.cbSize = 0;
     
     if(waveOutOpen(&hWaveOut, WAVE_MAPPER,&pFormat,0L, 0L, WAVE_FORMAT_DIRECT)) return 1;
@@ -73,5 +63,3 @@ int StartPlayback(char *data, int length)
     waveOutClose(hWaveOut);
     return 0;
 }
- 
-#endif

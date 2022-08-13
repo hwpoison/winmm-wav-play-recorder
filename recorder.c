@@ -13,16 +13,16 @@ int main(int argc, char **argv){
 	printf("File name:");
 	scanf("%s", filename);
 	if( option == '1'){
-		PlayWavFile(filename);
+		playWavFile(filename);
 	}
 	if ( option == '2' ){
 		printf("Duration(secs):");
 		scanf("%d", &duration);
-		RecordAndSaveWav(filename, duration);
+		recordAndSaveWav(filename, duration);
 		printf("Do you wanna play the file? y/n:");
 		scanf(" %c", &option);
 		if( option == 'y' ){
-			PlayWavFile(filename);
+			playWavFile(filename);
 		}else{
 			printf("Okey..\n");
 			exit(0);

@@ -1,21 +1,17 @@
 #include "wavutils.h"
 #include "record_audio.c"
 
-void playBuffer(char *rawdata, int nlen){
-    play(rawdata, nlen);
-}
-
 void recordAndSaveWav(char *filename, int secs) {
     printf("[+] Recording %d seconds...\n", secs);
-    int size = (secs * 2) * wav.sampleRate * 2;
+    int size = wav.sampleRate * wav.nChannels * (wav.bitsPerSample / 8) * secs;
     char *data = malloc(sizeof(char) * size);
     record(data, size);
     printf("[+] Saving .wav...\n");
-    generateWav(filename, data, size);
+    writeWavFile(filename, data, size);
     printf("[+] Recording finished.\n");
 }
 
-void generateWav(char *filename, char *rawdata, int size) { 
+void writeWavFile(char *filename, char *rawdata, int size) { 
     FILE *fp;
     fp = fopen(filename, "wb");
     fwrite("RIFF", 4, 1, fp);                               // 0-3 RIFF
@@ -51,8 +47,11 @@ long int getWavSize(FILE *wavin){
     return ftell(wavin);
 }
 
+void playBuffer(char *rawdata, int nlen){
+    play(rawdata, nlen);
+}
+
 void playWavFile(char *filename){
-    printf("[+] Playing %s\n", filename);
     int nread, size;
     char *buffer;
     FILE *wavin;

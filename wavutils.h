@@ -16,6 +16,6 @@ void playBuffer(char *rawdata, int nlen);
 void recordAndSaveWav(char *filename, int secs);
 
 // Generate a playable .wav file from a raw wavform
-void generateWav(char *filename, char *rawdata, int size);
+void writeWavFile(char *filename, char *rawdata, int size);
 
 #endif
